@@ -1,0 +1,25 @@
+#! /usr/bin/env bash
+
+hc() { herbstclient "$@"; }
+
+_options="logout\nreboot\npower off"
+
+fnt="$(xgetres dmenu.font)"
+bgc="$(xgetres color0)"
+fgc="$(xgetres color7)"
+sbc="$(xgetres color9)"
+sfc="$(xgetres color0)"
+
+result="$(echo -e "$_options" | dmenu \
+    -p "quit?"                        \
+    -fn "$fnt"                        \
+    -nb "$bgc"                        \
+    -nf "$fgc"                        \
+    -sb "$sbc"                        \
+    -sf "$sfc")"
+
+case $result in
+    logout     ) exec hc quit      ;;
+    reboot     ) exec reboot       ;;
+    "power off") exec shutdown now ;;
+esac

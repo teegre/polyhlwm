@@ -1,0 +1,69 @@
+#! /usr/bin/env bash
+
+mon=${1:-0}
+
+nbg="$(xgetres color0)"
+nfg="$(xgetres color7)"
+sbg="$(xgetres color3)"
+red="#FF0000"
+wht="#FFFFFF"
+
+hc() { herbstclient "$@"; }
+
+get_tags() {
+  local T
+  IFS=$'\t' read -ra tags <<< "$(hc tag_status "$mon")"
+  unset TAGS
+  for tag in "${tags[@]}"; do
+    T="${tag:1}"
+    case ${tag:0:1} in
+      ":")
+          if [[ $(myhc get_tag_mon "${tag:1}") == "$mon" ]]; then
+            TAGS+="%{B$nbg}%{F$sbg}%{A1:myhc switch_to_tag $T:} ${tag:1} %{A}"    # not empty + focused
+          else
+            TAGS+="%{B$nbg}%{F$nfg}%{A1:myhc switch_to_tag $T:} ${tag:1} %{A}"    # not empty + unfocused
+          fi
+          ;;
+      "#")  TAGS+="%{B$sbg}%{F$nfg}%{A1:myhc switch_to_tag $T:} ${tag:1} %{A}" ;; # viewed + focused
+      "-")  TAGS+="%{B$nfg}%{F$sbg}%{A1:myhc switch_to_tag $T:} ${tag:1} %{A}" ;; # viewed + unfocused
+      "+")  TAGS+="%{B$nfg}%{F$sbg}%{A1:myhc switch_to_tag $T:} ${tag:1} %{A}" ;; # viewed + unfocused
+      "%")  TAGS+="%{B$nbg}%{F$nfg}%{A1:myhc switch_to_tag $T:} ${tag:1} %{A}" ;; # viewed and focused
+      "!")  TAGS+="%{B$red}%{F$wht}%{A1:myhc switch_to_tag $T:} ${tag:1} %{A}" ;; # urgent
+    esac
+  done
+}
+
+get_clients() {
+  local tag clients
+  tag="$(hc attr monitors."$mon".tag)"
+  clients="$(hc attr tags.by-name."$tag".curframe_wcount)"
+  ((clients>1)) && { echo -n "$clients" ;  return; }
+  echo -n "M"
+}
+
+get_layout() {
+  local _layout tag
+  tag="$(hc attr monitors."$mon".tag)"
+  _layout="$(myhc layout "$tag")"
+  case $_layout in
+    vertical  ) LAYOUT="%{B$nbg}%{F$nfg} ||| " ;;
+    horizontal) LAYOUT="%{B$nbg}%{F$nfg} --- " ;;
+    max       ) LAYOUT="%{B$nbg}%{F$nfg} |$(get_clients)| " ;;
+    grid      ) LAYOUT="%{B$nbg}%{F$nfg} [-] " ;;
+  esac
+}
+
+{
+get_tags
+get_layout
+echo "${TAGS}${LAYOUT}"
+while IFS=$'\t' read -ra cmd; do
+  case ${cmd[0]} in
+    tag*          ) get_tags; get_layout ;;
+    layout_changed) get_layout ;;
+    focus_changed ) get_layout ;;
+    urgent        ) get_tags ;;
+  esac
+  echo "${TAGS}${LAYOUT}"
+done < <(hc --idle)
+}

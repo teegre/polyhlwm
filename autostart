@@ -246,6 +246,7 @@ hc rule windowtype='_NET_WM_WINDOW_TYPE_DIALOG' focus=on
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off
 
 hc rule class=firefox tag=2
+hc rule class=Steam   tag=5
 
 hc set tree_style '╾│ ├└╼─┐'
 

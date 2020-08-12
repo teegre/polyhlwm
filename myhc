@@ -157,6 +157,8 @@ handle_floaterm() {
     client="$(<"$floaterm")"
     if ! hc bring "$client" 2> /dev/null; then
       xdotool search --classname "floaterm" windowmap && return 0
+    else
+      return 0
     fi
   fi
   

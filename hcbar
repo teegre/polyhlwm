@@ -46,8 +46,8 @@ get_layout() {
   tag="$(hc attr monitors."$mon".tag)"
   _layout="$(myhc layout "$tag")"
   case $_layout in
-    vertical  ) LAYOUT="%{B$nbg}%{F$nfg} ||| " ;;
-    horizontal) LAYOUT="%{B$nbg}%{F$nfg} --- " ;;
+    vertical  ) LAYOUT="%{B$nbg}%{F$nfg} --- " ;;
+    horizontal) LAYOUT="%{B$nbg}%{F$nfg} ||| " ;;
     max       ) LAYOUT="%{B$nbg}%{F$nfg} |$(get_clients)| " ;;
     grid      ) LAYOUT="%{B$nbg}%{F$nfg} [-] " ;;
   esac

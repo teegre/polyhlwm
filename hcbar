@@ -61,7 +61,7 @@ while IFS=$'\t' read -ra cmd; do
   case ${cmd[0]} in
     tag*          ) get_tags; get_layout ;;
     layout_changed) get_layout ;;
-    focus_changed ) get_layout ;;
+    focus_changed ) get_tags; get_layout ;;
     urgent        ) get_tags ;;
   esac
   echo "${TAGS}${LAYOUT}"

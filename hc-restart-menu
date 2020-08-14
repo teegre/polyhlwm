@@ -11,7 +11,7 @@ sbc="$(xgetres color9)"
 sfc="$(xgetres color0)"
 
 result="$(echo -e "$_options" | dmenu \
-    -p "quit?"                        \
+    -p "⏻ "                           \
     -fn "$fnt"                        \
     -nb "$bgc"                        \
     -nf "$fgc"                        \

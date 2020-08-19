@@ -1,5 +1,7 @@
 #! /usr/bin/env bash
 
+### Herbstluftwm Tagbar Module for Polybar
+
 mon=${1:-0}
 
 nbg="$(xgetres color0)"
@@ -25,10 +27,10 @@ get_tags() {
           fi
           ;;
       "#")  TAGS+="%{B$sbg}%{F$nfg}%{A1:myhc switch_to_tag $T:} ${tag:1} %{A}" ;; # viewed + focused
-      "-")  TAGS+="%{B$nfg}%{F$sbg}%{A1:myhc switch_to_tag $T:} ${tag:1} %{A}" ;; # viewed + unfocused
+      "-")  TAGS+="%{B$nbg}%{F$nfg}%{A1:myhc switch_to_tag $T:} ${tag:1} %{A}" ;; # viewed + unfocused
       "+")  TAGS+="%{B$nfg}%{F$sbg}%{A1:myhc switch_to_tag $T:} ${tag:1} %{A}" ;; # viewed + unfocused
       "%")  TAGS+="%{B$nbg}%{F$nfg}%{A1:myhc switch_to_tag $T:} ${tag:1} %{A}" ;; # viewed and focused
-      "!")  TAGS+="%{B$red}%{F$wht}%{A1:myhc switch_to_tag $T:} ${tag:1} %{A}" ;; # urgent
+      "!")  TAGS+="%{B$red}%{F$wht}%{A1:myhc switch_to_tag $T:} ${tag:1} %{A}" ;; # urgent (doesn't work)
     esac
   done
 }
@@ -49,7 +51,7 @@ get_layout() {
     vertical  ) LAYOUT="%{B$nbg}%{F$nfg} --- " ;;
     horizontal) LAYOUT="%{B$nbg}%{F$nfg} ||| " ;;
     max       ) LAYOUT="%{B$nbg}%{F$nfg} |$(get_clients)| " ;;
-    grid      ) LAYOUT="%{B$nbg}%{F$nfg} [-] " ;;
+    grid      ) LAYOUT="%{B$nbg}%{F$nfg} [+] " ;;
   esac
 }
 

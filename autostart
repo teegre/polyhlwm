@@ -6,8 +6,10 @@ hc() {
   herbstclient "$@"
 }
 
+dunst-merge
+
 floaterm="myhc float"
-polyreload="$HOME/.config/herbstluftwm/panel.sh"
+polyreload="$HOME/.config/herbstluftwm/polybar-start"
 mastervolup="pamixer -i 5"
 mastervoldn="pamixer -d 5"
 mastervolmu="pamixer -t"

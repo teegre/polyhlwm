@@ -176,6 +176,8 @@ cycle_monitor() {
   switch_to_tag "$_tag"
 }
 
+# TODO: cycle_all
+
 # floating terminal
 
 _get_geometry() {

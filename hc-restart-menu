@@ -19,7 +19,7 @@ result="$(echo -e "$_options" | dmenu \
     -sf "$sfc")"
 
 case $result in
-    logout     ) exec hc quit      ;;
+    logout     ) hc quit           ;;
     reboot     ) exec reboot       ;;
     "power off") exec shutdown now ;;
 esac

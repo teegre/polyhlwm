@@ -6,8 +6,6 @@ hc() {
   herbstclient "$@"
 }
 
-dunst-merge
-
 floaterm="myhc float"
 polyreload="$HOME/.config/herbstluftwm/polybar-start"
 mastervolup="pamixer -i 5"
@@ -26,9 +24,10 @@ spotifydtoggle="playerctl -p spotifyd play-pause"
 spotifydnext="playerctl -p spotifyd next"
 spotifydprev="playerctl -p spotifyd prev"
 lighttoggle="ylight -t -S1000 -N"
-lightup="ylight -b +10 -u -N"
-lightdn="ylight -b -10 -u -N"
-lighttimer="ylight -NT"
+lightup="lt inc"
+lightdn="lt dec"
+lighttimer="ylight -T"
+killpicom="killall picom"
 
 hc emit_hook reload
 

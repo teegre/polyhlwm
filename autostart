@@ -27,7 +27,6 @@ lighttoggle="ylight -t -S1000 -N"
 lightup="lt inc"
 lightdn="lt dec"
 lighttimer="ylight -T"
-killpicom="killall picom"
 
 hc emit_hook reload
 

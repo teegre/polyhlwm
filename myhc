@@ -249,7 +249,8 @@ handle_floaterm() {
   if ! xdotool search --classname "floaterm" windowmap; then
     hc unrule instance="floaterm"
     hc rule instance="floaterm" floating=on focus=on
-    hc spawn st -n "floaterm" -g "120x24" 2> /dev/null
+    hc spawn st -n "floaterm" -g "120x25" 2> /dev/null
+    # hc spawn "${TERMINAL:-xterm}" -n "floaterm" -g "120x25" 2> /dev/null
     xdotool search --sync --onlyvisible --classname "floaterm"
     _center_floaterm
     hc attr clients.focus.winid > "$floaterm"

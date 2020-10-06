@@ -64,7 +64,7 @@ def _get_window_name_inner(win_obj):
 def get_window_name(win_id):
     if not win_id:
         last_seen['title'] = "-"
-        return last_seen['title']
+        return last_seen['title'], True
 
     title_changed = False
     with window_obj(win_id) as wobj:

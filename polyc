@@ -1,0 +1,3 @@
+#! /usr/bin/sh
+nvim ~/.config/polybar/config
+

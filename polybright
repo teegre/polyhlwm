@@ -1,0 +1,5 @@
+#! /bin/bash
+MAX=$(cat /sys/class/backlight/intel_backlight/max_brightness)
+NOW=$(cat /sys/class/backlight/intel_backlight/actual_brightness)
+VAL=$(echo "$NOW/$MAX*100+1" | bc -l | sed 's_\..*__g')
+printf "  %-3s%%\n" "$VAL"

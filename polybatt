@@ -1,0 +1,62 @@
+#! /usr/bin/env bash
+# ▁ ▃ ▄ ▅ ▆ ▇ █
+#             
+#     
+
+bat="$(cat /sys/class/power_supply/BAT1/capacity)"
+state="$(cat /sys/class/power_supply/BAT1/status)"
+
+case $bat in
+	[0-9])
+		bat_icon="%{Fcolors.alert}!"
+		#exit_code=33
+		;;
+	1[0-9])
+		bat_icon="%{Fcolors.alert}!"
+		;;
+	2[0-9])
+		bat_icon=""
+		;;
+	3[0-9])
+		bat_icon=""
+		;;
+	4[0-9])
+		bat_icon=""
+		;;
+	5[0-9])
+		bat_icon=""
+		;;
+	6[0-9])
+		bat_icon=""
+		;;
+	7[0-9])
+		bat_icon=""
+		;;
+	8[0-9])
+		bat_icon=""
+		;;
+	9[0-9])
+		bat_icon=""
+		;;
+	100)
+		bat_icon=""
+esac
+
+case $state in
+	Discharging)
+		power_icon=""
+		;;
+	Charging)
+		power_icon=""
+		;;
+	*)
+		power_icon=""
+		unset bat
+esac
+
+if [[ $bat ]]; then
+	printf "%s %s %-3s%%\n" "$bat_icon" "$power_icon" "$bat"
+else
+	printf "%s\n" "$power_icon"
+fi
+

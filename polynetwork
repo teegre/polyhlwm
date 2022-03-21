@@ -1,0 +1,16 @@
+#! /usr/bin/env bash
+
+iconn="$(nmcli -t -m multiline connection show --active 2>/dev/null)"
+for interface in /sys/class/net/[\!lo]*; do
+    if [[ "$(cat "$interface/carrier")" == 1 ]]; then
+		[[ -z $iconn ]] && {
+			echo "  "
+			break
+		}
+		echo "  ${iconn/NAME:/}" | sed 1q
+		break
+    else
+		echo "  "
+		break
+    fi
+done

@@ -2,7 +2,7 @@
 
 hc() { herbstclient "$@"; }
 
-_options="logout\nreboot\npower off"
+_options="lock\nlogout\nreboot\npower off"
 
 fnt="$(xgetres dmenu.font)"
 bgc="$(xgetres color0)"
@@ -19,6 +19,7 @@ result="$(echo -e "$_options" | dmenu \
     -sf "$sfc")"
 
 case $result in
+    lock       ) dwm-lock          ;;
     logout     ) hc quit           ;;
     reboot     ) exec reboot       ;;
     "power off") exec shutdown now ;;

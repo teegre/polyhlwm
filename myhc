@@ -7,29 +7,30 @@ _debug() {
 }
 
 _get_focused() {
+  local _mon
   # get focused monitor info
   while read -r _mon; do
     [[ $_mon =~ \[FOCUS\]$ ]] && { echo "$_mon"; return 0; }
   done <<< "$(hc list_monitors)"
-  unset _mon
   return 1
 }
 
 _get_tag() {
+  local _tag
   # extract tag from focused monitor info
-  IFS=$'\n' read -d "" -ra __tag <<< "${1//\"/$'\n'}"
+  IFS=$'\n' read -d "" -ra _tag <<< "${1//\"/$'\n'}"
   echo "${__tag[1]}"
-  unset __tag
 }
 
 get_focused_tag() {
-  local mon
-  mon="$(_get_focused)" || return 1
-  _get_tag "$mon"
+  local _mon
+  _mon="$(_get_focused)" || return 1
+  _get_tag "$_mon"
   return 0
 }
 
 get_float_tag() {
+  local attr
   while read -r attr; do
     [[ $attr =~ ^.*tag.*$ ]] && {
       _get_tag "$attr"
@@ -40,21 +41,20 @@ get_float_tag() {
 }
 
 get_focused_mon() {
-  local mon
-  mon="$(_get_focused)"
-  echo "${mon:0:1}"
+  local _mon
+  _mon="$(_get_focused)"
+  echo "${_mon:0:1}"
 }
 
 get_layout() {
-  local _layout tag
-  tag="${1:-"$(get_focused_tag)"}"
+  local _layout __layout _tag L
+  _tag="${1:-"$(get_focused_tag)"}"
   while read -r L; do
     [[ $L =~ \[FOCUS\]$ ]] && { _layout="$L"; break; }
-  done < <(hc layout "$tag")
+  done < <(hc layout "$_tag")
   unset L
   IFS=$'\n' read -d "" -ra __layout <<< "${_layout// /$'\n'}"
   echo "${__layout[1]:0:-1}"
-  unset __layout
 }
 
 set_layout() {
@@ -63,6 +63,7 @@ set_layout() {
     h) hc set_layout horizontal ;;
     m) hc set_layout max        ;;
     g) hc set_layout grid       ;;
+    f) hc floating toggle       ;;
     *) hc set_layout vertical
   esac
   hc emit_hook "layout_changed"
@@ -79,9 +80,9 @@ __SAVEDTAGS="/tmp/herbstluftwm:tag_save_state"
 
 _is_tag_empty() {
   local _tag="$1"
+  [[ $_tag ]] || return 1
   IFS=$'\t' read -ra __status <<< "$(hc tag_status)"
   for tag in "${__status[@]}"; do
-    [[ ! $_tag ]] && continue
     [[ ${tag:1} == "$_tag" ]] && [[ ${tag:0:1} == "." ]] && return 0
   done
   return 1
@@ -94,7 +95,7 @@ discard_empty_tags() {
   local T
   for ((i=0;i<=${#_ss};i++)); do
     [[ ! ${_ss[$i]} ]] && continue
-    [[ ${_ss[$i]} =~ ^(.*)::.*$ ]] && T="${BASH_REMATCH[1]}"
+    [[ ${_ss[$i]} =~ ^(.+)::.+$ ]] && T="${BASH_REMATCH[1]}"
     if [[ $T == "$_tag" ]]; then
       echo "${_ss[$i]}" >> "$__SAVEDTAGS"
     else
@@ -113,16 +114,17 @@ save_tag_mon() {
     echo "$_tag::$mon" >> "$__SAVEDTAGS"
     return 0
   else
+    local _ss i
     IFS=$'\n' read -d "" -ra _ss < "$__SAVEDTAGS"
-    for ((i=0;i<=${#_ss};i++)); do
+    for ((i=0;i<${#_ss};i++)); do
       [[ ${_ss[$i]} =~ ^$_tag ]] && {
         [[ ${_ss[$i]} == "$_tag::$mon" ]] && {
           return 0
         }
         _ss[$i]="$_tag::$mon"
         :> "$__SAVEDTAGS"
-        local T
-        for ((j=0;j<=${#_ss};j++)); do
+        local j
+        for ((j=0;j<${#_ss};j++)); do
           echo "${_ss[$j]}" >> "$__SAVEDTAGS"
         done
         return 0
@@ -151,7 +153,8 @@ get_tag_mon() {
 }
 
 switch_to_tag() {
-  local mon _tag="$1"
+  local mon _tag
+  _tag="$(hc get_attr tags."${1}".name)"
   mon="$(get_tag_mon "$_tag")"
   hc chain . lock . focus_monitor "$mon" . use "$_tag" . unlock
   save_tag_mon "$_tag"
@@ -169,11 +172,16 @@ switch_to_monitor() {
   save_tag_mon "$_tag"
 }
 
-cycle_monitor() {
-  local _tag
-  hc cycle_monitor
-  _tag="$(get_focused_tag)"
-  switch_to_tag "$_tag"
+jump_to_urgent() {
+  local tag tags
+  IFS=$'\t' read -ra tags <<< "$(hc tag_status)"
+  for tag in "${tags[@]}"; do
+    [[ $tag =~ ^!(.+) ]] && {
+      switch_to_tag "$(hc get_attr tags.by-name."${BASH_REMATCH[1]}".index)"
+      return 0
+    }
+  done
+  return 1
 }
 
 # TODO: cycle_all
@@ -249,7 +257,7 @@ handle_floaterm() {
   if ! xdotool search --classname "floaterm" windowmap; then
     hc unrule instance="floaterm"
     hc rule instance="floaterm" floating=on focus=on
-    hc spawn st -n "floaterm" -g "120x25" 2> /dev/null
+    hc spawn st -n "floaterm" -g "135x28" 2> /dev/null
     # hc spawn "${TERMINAL:-xterm}" -n "floaterm" -g "120x25" 2> /dev/null
     xdotool search --sync --onlyvisible --classname "floaterm"
     _center_floaterm

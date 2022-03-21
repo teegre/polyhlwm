@@ -1,4 +1,9 @@
 #! /usr/bin/env python
+
+# windowname="$(xdotool getactivewindow getwindowname 2> /dev/null)"
+# windowname="${windowname:--}"
+# echo "$windowname"
+
 from contextlib import contextmanager
 import Xlib
 import Xlib.display
@@ -11,7 +16,7 @@ NET_ACTIVE_WINDOW = disp.intern_atom('_NET_ACTIVE_WINDOW')
 NET_WM_NAME = disp.intern_atom('_NET_WM_NAME')  # UTF-8
 WM_NAME = disp.intern_atom('WM_NAME')           # Legacy encoding
 
-last_seen = { 'xid': None, 'title': None }
+last_seen = { 'xid': 0, 'title': '-' }
 
 @contextmanager
 def window_obj(win_id):
@@ -105,4 +110,6 @@ if __name__ == '__main__':
             handle_xevent(disp.next_event())
         except KeyboardInterrupt:
             exit()
+        except:
+            print('-')
 

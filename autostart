@@ -6,29 +6,18 @@ hc() {
   herbstclient "$@"
 }
 
-dunst-merge
-
 floaterm="myhc float"
 polyreload="$HOME/.config/herbstluftwm/polybar-start"
 mastervolup="pamixer -i 5"
 mastervoldn="pamixer -d 5"
 mastervolmu="pamixer -t"
-musicvolup="mpcw vol +5"
-musicvoldn="mpcw vol -5"
-musicvoldm="mpcw dim"
-musictoggle="mpcw toggle"
-musicnext="mpc -q next"
-musicprev="mpc -q prev"
-musicstop="mpcw stop"
-spotifydvolup="appvol spotifyd -n +5"
-spotifydvoldn="appvol spotifyd -n -5"
-spotifydtoggle="playerctl -p spotifyd play-pause"
-spotifydnext="playerctl -p spotifyd next"
-spotifydprev="playerctl -p spotifyd prev"
-lighttoggle="ylight -t -S1000 -N"
-lightup="lt inc"
-lightdn="lt dec"
-lighttimer="ylight -T"
+mastervoldm="vdim"
+# spotifydvolup="appvol spotifyd -n +5"
+# spotifydvoldn="appvol spotifyd -n -5"
+# spotifydtoggle="playerctl -p spotifyd play-pause"
+# spotifydnext="playerctl -p spotifyd next"
+# spotifydprev="playerctl -p spotifyd previous"
+rofiw="rofi -show window"
 
 hc emit_hook reload
 
@@ -52,34 +41,53 @@ hc keybind $Mod-Shift-e     spawn hc-restart-menu
 
 # shellcheck disable=SC2086
 {
+
+# floating terminal
 hc keybind $Mod-a           spawn $floaterm
+
+# polybar reload
 hc keybind $Mod-Control-r   spawn $polyreload
-hc keybind $Mod-F1          spawn $musictoggle
-hc keybind $Mod-F2          spawn $musicprev
-hc keybind $Mod-F3          spawn $musicnext
-hc keybind $Mod-F4          spawn $musicstop
-hc keybind $Mod-Control-F1  spawn $spotifydtoggle
-hc keybind $Mod-Control-F2  spawn $spotifydprev
-hc keybind $Mod-Control-F3  spawn $spotifydnext
-hc keybind $Mod-F9          spawn $musicvoldm
-hc keybind $Mod-F10         spawn $musicvoldn
-hc keybind $Mod-F11         spawn $musicvolup
+
+# mpd
+hc keybind $Mod-F1          spawn p
+hc keybind $Mod-Shift-F1    spawn pla
+hc keybind $Mod-F2          spawn pv
+hc keybind $Mod-F3          spawn nx
+hc keybind $Mod-F4          spawn s
+hc keybind $Mod-Shift-F4    spawn sta -n
+hc keybind $Mod-Shift-F12   spawn dim -n
+hc keybind $Mod-F10         spawn vol -n -5
+hc keybind $Mod-F11         spawn vol -n +5
+
+# spotifyd
+# hc keybind $Mod-F5          spawn $spotifydtoggle
+# hc keybind $Mod-F6          spawn $spotifydprev
+# hc keybind $Mod-F7          spawn $spotifydnext
+# hc keybind $Mod-Shift-F10   spawn $spotifydvoldn
+# hc keybind $Mod-Shift-F11   spawn $spotifydvolup
+
+# master volume
 hc keybind $Mod-Control-F9  spawn $mastervolmu
 hc keybind $Mod-Control-F10 spawn $mastervoldn
 hc keybind $Mod-Control-F11 spawn $mastervolup
-hc keybind $Mod-Shift-F10   spawn $spotifydvoldn
-hc keybind $Mod-Shift-F11   spawn $spotifydvolup
-hc keybind $Mod-Shift-F1    spawn $lighttoggle
-hc keybind $Mod-Shift-F2    spawn $lightdn
-hc keybind $Mod-Shift-F3    spawn $lightup
-hc keybind $Mod-Control-F4  spawn screen_off
-hc keybind $Mod-Shift-F4    spawn dwm-lock
-hc keybind $Mod-Shift-F9    spawn $lighttimer
+hc keybind $Mod-Control-F12 spawn $mastervoldm
+
+# utils
+hc keybind $Mod-Control-p   spawn getpass
+hc keybind $Mod-Control-w   spawn light
+hc keybind $Mod-Shift-a     spawn $rofiw
 }
-# hc keybind $Mod-Control-q quit
-hc keybind $Mod-Shift-r reload
-hc keybind $Mod-Shift-q close
-hc keybind $Mod-Return spawn "${TERMINAL:-xterm}" # use your $TERMINAL with xterm as fallback
+
+hc keybind $Mod-Control-e   spawn emojis
+hc keybind $Mod-Control-q   quit
+hc keybind $Mod-Shift-r     reload
+hc keybind $Mod-Shift-q     close
+hc keybind $Mod-Return      spawn "${TERMINAL:-xterm}" # use your $TERMINAL with xterm as fallback
+
+# dunst
+hc keybind Control-space    spawn dunstctl close
+hc keybind Control-Shift-space  spawn dunstctl close-all
+hc keybind Control-Shift-h  spawn dunstctl history-pop
 
 # basic movement in tiling and floating mode
 # focusing clients
@@ -121,18 +129,18 @@ hc keybind $Mod-Control-Up      resize up +$resizestep
 hc keybind $Mod-Control-Right   resize right +$resizestep
 
 # tags
-tag_names=( {1..9} )
+# tag_names=( {1..9} )
 # tag_keys=( {1..9} 0 )
 
-hc rename default "${tag_names[0]}" || true
-for i in "${!tag_names[@]}" ; do
-  hc add "${tag_names[$i]}"
+# hc rename default "${tag_names[0]}" || true
+# for i in "${!tag_names[@]}" ; do
+  # hc add "${tag_names[$i]}"
   # key="${tag_keys[$i]}"
   # if [ -n "$key" ] ; then
     # hc keybind "$Mod-$key" use_index "$i"
     # hc keybind "$Mod-$key" move_index "$i"
   # fi
-done
+# done
 
 # cycle through tags
 hc keybind $Mod-asterisk use_index +1 --skip-visible
@@ -140,25 +148,37 @@ hc keybind $Mod-ugrave   use_index -1 --skip-visible
 
 hc set swap_monitors_to_get_tag false
 
-hc keybind $Mod-ampersand  spawn myhc switch_to_tag 1
-hc keybind $Mod-eacute     spawn myhc switch_to_tag 2
-hc keybind $Mod-quotedbl   spawn myhc switch_to_tag 3
-hc keybind $Mod-apostrophe spawn myhc switch_to_tag 4
-hc keybind $Mod-parenleft  spawn myhc switch_to_tag 5
-hc keybind $Mod-minus      spawn myhc switch_to_tag 6
-hc keybind $Mod-egrave     spawn myhc switch_to_tag 7
-hc keybind $Mod-underscore spawn myhc switch_to_tag 8
-hc keybind $Mod-ccedilla   spawn myhc switch_to_tag 9
+hc rename default 0 || true
 
-hc keybind $Mod-Control-ampersand  spawn myhc switch_to_monitor 1
-hc keybind $Mod-Control-eacute     spawn myhc switch_to_monitor 2
-hc keybind $Mod-Control-quotedbl   spawn myhc switch_to_monitor 3
-hc keybind $Mod-Control-apostrophe spawn myhc switch_to_monitor 4
-hc keybind $Mod-Control-parenleft  spawn myhc switch_to_monitor 5
-hc keybind $Mod-Control-minus      spawn myhc switch_to_monitor 6
-hc keybind $Mod-Control-egrave     spawn myhc switch_to_monitor 7
-hc keybind $Mod-Control-underscore spawn myhc switch_to_monitor 8
-hc keybind $Mod-Control-ccedilla   spawn myhc switch_to_monitor 9
+for ((i==1; i<7; i++)); do hc add $((i)); done
+
+hc rename 0 def
+hc rename 1 www
+hc rename 2 mon
+hc rename 3 srv
+hc rename 4 dev
+hc rename 5 oth
+hc rename 6 mus
+
+hc keybind $Mod-ampersand  spawn myhc switch_to_tag 0
+hc keybind $Mod-eacute     spawn myhc switch_to_tag 1
+hc keybind $Mod-quotedbl   spawn myhc switch_to_tag 2
+hc keybind $Mod-apostrophe spawn myhc switch_to_tag 3
+hc keybind $Mod-parenleft  spawn myhc switch_to_tag 4
+hc keybind $Mod-minus      spawn myhc switch_to_tag 5
+hc keybind $Mod-egrave     spawn myhc switch_to_tag 6
+hc keybind $Mod-underscore spawn myhc switch_to_tag 7
+hc keybind $Mod-ccedilla   spawn myhc switch_to_tag 8
+
+hc keybind $Mod-Control-ampersand  spawn myhc switch_to_monitor 0
+hc keybind $Mod-Control-eacute     spawn myhc switch_to_monitor 1
+hc keybind $Mod-Control-quotedbl   spawn myhc switch_to_monitor 2
+hc keybind $Mod-Control-apostrophe spawn myhc switch_to_monitor 3
+hc keybind $Mod-Control-parenleft  spawn myhc switch_to_monitor 4
+hc keybind $Mod-Control-minus      spawn myhc switch_to_monitor 5
+hc keybind $Mod-Control-egrave     spawn myhc switch_to_monitor 6
+hc keybind $Mod-Control-underscore spawn myhc switch_to_monitor 7
+hc keybind $Mod-Control-ccedilla   spawn myhc switch_to_monitor 8
 
 hc keybind $Mod-Shift-ampersand  move_index 0
 hc keybind $Mod-Shift-eacute     move_index 1
@@ -172,7 +192,7 @@ hc keybind $Mod-Shift-ccedilla   move_index 8
 
 # layouting
 hc keybind $Mod-r remove
-hc keybind $Mod-s floating toggle
+hc keybind $Mod-s spawn myhc setlayout f # floating
 hc keybind $Mod-f fullscreen toggle
 hc keybind $Mod-Shift-f set_attr clients.focus.floating toggle
 hc keybind $Mod-p pseudotile toggle
@@ -197,12 +217,12 @@ hc mousebind $Mod-Button2 zoom
 hc mousebind $Mod-Button3 resize
 
 # focus
-hc keybind $Mod-BackSpace   spawn myhc cycle_monitor
-hc keybind $Mod-twosuperior spawn myhc cycle_monitor
+hc keybind $Mod-BackSpace   cycle_monitor
+hc keybind $Mod-twosuperior cycle_monitor
 hc keybind $Mod-Tab         cycle_all +1
 hc keybind $Mod-Shift-Tab   cycle_all -1
 hc keybind $Mod-c cycle
-hc keybind $Mod-i jumpto urgent
+hc keybind $Mod-i spawn myhc jump_to_urgent
 
 # theme
 hc attr theme.tiling.reset 1
@@ -230,7 +250,7 @@ hc attr theme.active.inner_color "$(xgetres color7)"
 hc attr theme.active.outer_color "$(xgetres color7)"
 hc attr theme.background_color "$(xgetres color2)"
 
-hc set window_gap 6
+hc set window_gap 0
 hc set frame_padding 0
 hc set smart_window_surroundings on
 hc set smart_frame_surroundings on
@@ -243,12 +263,17 @@ hc rule focus=on # normally focus new clients
 #hc rule focus=off # normally do not focus new clients
 # give focus to most common terminals
 #hc rule class~'(.*[Rr]xvt.*|.*[Tt]erm|Konsole)' focus=on
-hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' floating=on
+hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' floating=on manage=on
 hc rule windowtype='_NET_WM_WINDOW_TYPE_DIALOG' focus=on
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off
 
-hc rule class=firefox tag=2
-hc rule class=Steam   tag=5
+hc rule class=mpv         tag=def
+hc rule class=qutebrowser tag=www
+hc rule class=lagrange    tag=www
+hc rule class=Steam       tag=oth
+
+hc rule instance="vkeybd.tcl" floating=on focus=on
+hc rule instance="qjackctl" floating=on focus=on
 
 hc set tree_style '╾│ ├└╼─┐'
 

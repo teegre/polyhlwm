@@ -8,21 +8,18 @@ background = \"$(xgetres color0)\"
 foreground = \"$(xgetres color7)\"
 frame_color = \"$(xgetres color7)\"
 timeout = 10
-icon = /usr/share/icons/Adwaita/16x16/status/dialog-information-symbolic.symbolic.png
 
 [urgency_normal]
 background = \"$(xgetres color4)\"
 foreground = \"$(xgetres color0)\"
 frame_color = \"$(xgetres color0)\"
 timeout = 10
-icon = /usr/share/icons/Adwaita/16x16/status/dialog-information-symbolic.symbolic.png
 
 [urgency_critical]
 background = \"$(xgetres color1)\"
 foreground = \"$(xgetres color7)\"
 frame_color = \"$(xgetres color7)\"
 timeout = 0
-icon = /usr/share/icons/Adwaita/16x16/status/dialog-warning-symbolic.symbolic.png
 " > $DUNSTDIR/dunst-theme
 
 {
@@ -31,5 +28,5 @@ icon = /usr/share/icons/Adwaita/16x16/status/dialog-warning-symbolic.symbolic.pn
 } > $DUNSTDIR/dunstrc
 
 pidof dunst > /dev/null && killall dunst
-dunst > /dev/null &
+dunst &> /dev/null &
 

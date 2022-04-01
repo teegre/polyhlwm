@@ -7,6 +7,8 @@ day="$(LC_TIME=C date "+%a")"
 day="${day^^}"
 day="${day:0:2}"
 hour="$(LC_TIME=C date "+%I")"
+# uptime="$(uptime -p | cut -d' ' -f 2-)"
+# echo -n "$uptime "
 case $hour in
   01) echo -n " " ;;
   02) echo -n " " ;;

@@ -19,7 +19,7 @@ _get_tag() {
   local _tag
   # extract tag from focused monitor info
   IFS=$'\n' read -d "" -ra _tag <<< "${1//\"/$'\n'}"
-  echo "${__tag[1]}"
+  echo "${_tag[1]}"
 }
 
 get_focused_tag() {
@@ -135,7 +135,7 @@ save_tag_mon() {
 }
 
 get_tag_mon() {
-  local mon _tag="$1"
+  local mon __tag _tag="$1"
   mon="$(hc attr monitors.focus.index)"
   [[ ! -f "$__SAVEDTAGS" ]] && {
     echo "$mon"

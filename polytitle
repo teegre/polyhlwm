@@ -33,11 +33,11 @@ while read -r id; do
     while read -r; do
       [[ -f $PIDFILE ]] && sPID="$(<"$PIDFILE")"
       [[ $sPID ]] && kill -0 $((sPID)) 2> /dev/null &&
-        {
-          kill INT $((sPID)) 2> /dev/null
-          wait $((sPID)) 2> /dev/null
-          [[ -f "$PIDFILE" ]] && rm "$PIDFILE"
-        }
+      {
+        kill INT $((sPID)) 2> /dev/null
+        wait $((sPID)) 2> /dev/null
+        [[ -f "$PIDFILE" ]] && rm "$PIDFILE"
+      }
       [[ $REPLY =~ ^.*=[[:space:]]*\"(.+)\"$ ]] && {
         scroller -s " /// " -t "${BASH_REMATCH[1]//\\}" & echo $! > "$PIDFILE"
         sPID="$(<"$PIDFILE")"

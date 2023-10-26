@@ -27,11 +27,11 @@ get_tags() {
             TAGS+="%{B$nbg}%{F$nfg}%{A1:myhc switch_to_tag $I:} $T %{A}"    # not empty + unfocused
           fi
           ;;
-      "#")  TAGS+="%{B$nbg}%{F$sbg}%{A1:myhc switch_to_tag $I:}[$T]%{A}" ;; # viewed + focused
+      "#")  TAGS+="%{B$sbg}%{F$nfg}%{A1:myhc switch_to_tag $I:} $T %{A}" ;; # viewed + focused
       "-")  TAGS+="%{B$nbg}%{F$nfg}%{A1:myhc switch_to_tag $I:} $T %{A}" ;; # viewed + unfocused
-      "+")  TAGS+="%{B$nbg}%{F$nfg}%{A1:myhc switch_to_tag $I:}[$T]%{A}" ;; # viewed + unfocused
+      "+")  TAGS+="%{B$nfg}%{F$nbg}%{A1:myhc switch_to_tag $I:} $T %{A}" ;; # viewed + unfocused
       "%")  TAGS+="%{B$nbg}%{F$nfg}%{A1:myhc switch_to_tag $I:} $T %{A}" ;; # viewed and focused
-      "!")  TAGS+="%{B$red}%{F$wht}%{A1:myhc switch_to_tag $I:} $T %{A}" ;; # urgent (sometimes work)
+      "!")  TAGS+="%{B$red}%{F$wht}%{A1:myhc switch_to_tag $I:} $T %{A}" ;; # urgent
     esac
   done
 }

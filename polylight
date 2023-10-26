@@ -43,7 +43,7 @@ get_status() {
 listen() {
   while read -r; do
   	get_status
-  done < <(netcat "$H" "$P" 2> /dev/null || exit 1)
+  done < <(netcat "$H" "$P" 2> /dev/null || exit 127)
 }
 
 quit() {
@@ -56,4 +56,8 @@ quit() {
 
 trap quit INT TERM QUIT
 get_status
-listen
+while :; do
+  listen
+  (($?==127)) && continue
+  break
+done

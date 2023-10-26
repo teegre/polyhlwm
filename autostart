@@ -52,7 +52,9 @@ hc keybind $Mod-Control-r   spawn $polyreload
 hc keybind $Mod-F1          spawn p
 hc keybind $Mod-Shift-F1    spawn pla
 hc keybind $Mod-F2          spawn pv
+hc keybind $Mod-Shift-F2    spawn smpcp mode album ++ clear
 hc keybind $Mod-F3          spawn nx
+hc keybind $Mod-Shift-F3    spawn cpl
 hc keybind $Mod-F4          spawn s
 hc keybind $Mod-Shift-F4    spawn sta -n
 hc keybind $Mod-Shift-F12   spawn dim -n
@@ -72,22 +74,26 @@ hc keybind $Mod-Control-F10 spawn $mastervoldn
 hc keybind $Mod-Control-F11 spawn $mastervolup
 hc keybind $Mod-Control-F12 spawn $mastervoldm
 
+hc keybind $Mod-Shift-Control-F10 spawn pamixer -d 1
+hc keybind $Mod-Shift-Control-F11 spawn pamixer -i 1
+
 # utils
 hc keybind $Mod-Control-p   spawn getpass
 hc keybind $Mod-Control-w   spawn light
 hc keybind $Mod-Shift-a     spawn $rofiw
 }
 
-hc keybind $Mod-Control-e   spawn emojis
-hc keybind $Mod-Control-q   quit
-hc keybind $Mod-Shift-r     reload
-hc keybind $Mod-Shift-q     close
-hc keybind $Mod-Return      spawn "${TERMINAL:-xterm}" # use your $TERMINAL with xterm as fallback
+hc keybind $Mod-Control-e       spawn emojis
+hc keybind $Mod-Control-Shift-q quit
+hc keybind $Mod-Shift-r         reload
+hc keybind $Mod-Shift-q         close
+hc keybind $Mod-Return          spawn "${TERMINAL:-xterm}" # use your $TERMINAL with xterm as fallback
+hc keybind $Mod-Control-Return  spawn firefox
 
 # dunst
-hc keybind Control-space    spawn dunstctl close
+hc keybind Control-space        spawn dunstctl close
 hc keybind Control-Shift-space  spawn dunstctl close-all
-hc keybind Control-Shift-h  spawn dunstctl history-pop
+hc keybind Control-Shift-h      spawn dunstctl history-pop
 
 # basic movement in tiling and floating mode
 # focusing clients
@@ -148,17 +154,17 @@ hc keybind $Mod-ugrave   use_index -1 --skip-visible
 
 hc set swap_monitors_to_get_tag false
 
-hc rename default 0 || true
+hc rename default 1 || true
 
-for ((i=1; i<7; i++)); do hc add $((i)); done
+for ((i=1; i<10; i++)); do hc add $((i)); done
 
-hc rename 0 def
-hc rename 1 www
-hc rename 2 mon
-hc rename 3 srv
-hc rename 4 dev
-hc rename 5 oth
-hc rename 6 mus
+# hc rename 0 def
+# hc rename 1 www
+# hc rename 2 mon
+# hc rename 3 srv
+# hc rename 4 dev
+# hc rename 5 oth
+# hc rename 6 mus
 
 hc keybind $Mod-ampersand  spawn myhc switch_to_tag 0
 hc keybind $Mod-eacute     spawn myhc switch_to_tag 1
@@ -195,7 +201,7 @@ hc keybind $Mod-r remove
 hc keybind $Mod-s spawn myhc setlayout f # floating
 hc keybind $Mod-f fullscreen toggle
 hc keybind $Mod-Shift-f set_attr clients.focus.floating toggle
-hc keybind $Mod-p pseudotile toggle
+hc keybind $Mod-q pseudotile toggle
 
 hc keybind $Mod-v spawn myhc setlayout v # vertical
 hc keybind $Mod-w spawn myhc setlayout h # horizontal
@@ -235,7 +241,7 @@ hc set frame_border_width 1
 hc set always_show_frame off
 hc set frame_bg_transparent on
 hc set frame_transparent_width 1
-hc set frame_gap 1
+hc set frame_gap 4
 
 hc attr theme.active.color "$(xgetres color6)"
 hc attr theme.normal.color "$(xgetres color0)"
@@ -267,12 +273,13 @@ hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' floating=on man
 hc rule windowtype='_NET_WM_WINDOW_TYPE_DIALOG' focus=on
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off
 
-hc rule class=mpv         tag=def
-hc rule class=qutebrowser tag=www
-hc rule class=firefox     tag=www
-hc rule class=lagrange    tag=www
-hc rule class=Steam       tag=oth
-
+hc rule class=mpv         tag=1
+hc rule class=qutebrowser tag=2
+hc rule class=firefox     tag=2
+hc rule class=lagrange    tag=2
+hc rule class=Steam       tag=6
+hc rule class=Renoise     tag=6
+hc rule class=TeamViewer  tag=8
 hc rule instance="vkeybd.tcl" floating=on focus=on
 hc rule instance="qjackctl" floating=on focus=on
 
@@ -289,3 +296,6 @@ hc set_monitors 1920x1080+0+0 1366x768+1920+312
 
 # launch polybar
 "$HOME/.config/herbstluftwm/polybar-start"
+
+# launch nm-applet
+nm-applet

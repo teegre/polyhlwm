@@ -53,7 +53,7 @@ get_layout() {
   case $_layout in
     vertical  ) LAYOUT="%{B$nbg}%{F$nfg} [-] " ;;
     horizontal) LAYOUT="%{B$nbg}%{F$nfg} [|] " ;;
-    max       ) LAYOUT="%{B$nbg}%{F$nfg} [$(get_clients)] " ;;
+    max       ) LAYOUT="%{B$nbg}%{F$nfg} %{A1:herbstclient cycle :}[$(get_clients)]%{A} " ;;
     grid      ) LAYOUT="%{B$nbg}%{F$nfg} [+] " ;;
   esac
   if [[ $_float == "on" ]]; then

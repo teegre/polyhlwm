@@ -59,4 +59,3 @@ if [[ $bat ]]; then
 else
 	printf "%s\n" "$power_icon"
 fi
-

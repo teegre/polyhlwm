@@ -13,7 +13,7 @@ while read -r color; do
 	((i++))
 done < <(cat "$HOME/.cache/wal/colors")
 
-echo "dmenu.font: TerminessTTF Nerd Font:size=11" >> "$HOME/.Xresources"
+echo "dmenu.font: Terminess Nerd Font:size=11" >> "$HOME/.Xresources"
 
 # 4. Reload .Xresources"
 xrdb "$HOME/.Xresources"

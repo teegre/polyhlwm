@@ -1,16 +1,24 @@
 #! /usr/bin/env bash
+declare -a INTERFACES
+declare -A CXN
 
-iconn="$(nmcli -t -m multiline connection show --active 2>/dev/null)"
-for interface in /sys/class/net/[\!lo]*; do
-    if [[ "$(cat "$interface/carrier")" == 1 ]]; then
-		[[ -z $iconn ]] && {
-			echo "  "
-			break
-		}
-		echo "  ${iconn/NAME:/}" | sed 1q
-		break
+while read -r; do
+  [[ $REPLY =~ ^default ]] &&
+    INTERFACES+=("$(echo "${REPLY}" | cut -d' ' -f5)")
+done < <(ip route)
+
+while read -r; do
+  for I in ${INTERFACES[@]}; do
+    [[ $REPLY =~ ^(.+):.+:.+:"$I"$ ]] && CXN["$I"]="${BASH_REMATCH[1]}"
+  done
+done < <(nmcli -t connection show --active 2>/dev/null)
+
+for I in /sys/class/net/[!lo]*; do
+  if [[ "$(cat "$I/carrier")" -eq "1" ]]; then
+    if [[ -z ${CXN["${I##/sys/class/net/}"]} ]]; then
+      echo "  "
     else
-		echo "  "
-		break
+      echo "  ${CXN["${I##/sys/class/net/}"]}"
     fi
+  fi
 done

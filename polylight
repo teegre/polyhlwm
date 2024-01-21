@@ -21,7 +21,7 @@ read_value() {
 get_status() {
   local W B T S
 
-  IFS=$'\n' read -d "" -ra _st <<< "$(ylight -s)"
+  IFS=$'\n' read -d "" -ra _st <<< "$(ylightc -s)"
 
   H=$(read_value host)
   P=$(read_value port)
@@ -30,10 +30,10 @@ get_status() {
   T=$(read_value timer)
 
   if [[ $W ]]; then
-  	[[ $W == "on" ]] && S=" $B" || S=""
+  	[[ $W == "on" ]] && S="->- $B" || S="-/-"
   	[[ $T ]] && S+="  $T"
   else
-  	S="()"
+  	S="-?-"
   fi
 
   # maxlen=16
